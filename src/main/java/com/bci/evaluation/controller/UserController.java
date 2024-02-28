@@ -37,7 +37,7 @@ public class UserController {
   public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
 
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(this.userService.saveUser(userRequest));
+        .body(this.userAuthenticationService.firstTimeAuthenticate(userRequest));
   }
 
   @GetMapping("/user/{email}")

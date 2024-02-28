@@ -41,7 +41,7 @@ class UserControllerTest {
   @Test
   void whenCreateUserThenCreated() {
 
-    when(this.userService.saveUser(TestUtils.getUserRequest())).thenReturn(
+    when(this.userAuthenticationService.firstTimeAuthenticate(TestUtils.getUserRequest())).thenReturn(
         TestUtils.getUserResponse());
 
     assertEquals(ResponseEntity.status(HttpStatus.CREATED).body(TestUtils.getUserResponse()),

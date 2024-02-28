@@ -35,4 +35,9 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
   }
 
+  public UserDetails firstTimeLoadUserByUsername(String username, String password) {
+
+    return new org.springframework.security.core.userdetails.User(username, password, new ArrayList<>());
+  }
+
 }

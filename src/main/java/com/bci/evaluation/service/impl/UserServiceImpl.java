@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
   private static final String EMAIL_OR_PASSWORD_BAD_REQUEST = "Invalid email or password, check the requirements for them and try again";
 
   @Override
-  public UserResponse saveUser(UserRequest userRequest) {
+  public UserResponse saveUser(UserRequest userRequest, String token) {
 
     if (this.findByEmail(userRequest.getEmail()).isPresent()) {
       throw new AlreadyExistsException(ALREADY_EXISTS);
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
-    User user = this.save(User.fromRequest(userRequest));
+    User user = this.save(User.fromRequest(userRequest, token));
     user.getPhones().forEach(phone -> phone.setUser(user));
 
     phoneService.saveAll(user.getPhones());
@@ -91,6 +91,10 @@ public class UserServiceImpl implements UserService {
   }
 
   private User save(User user) {
+    Optional<User> userOptional = this.findByEmailIsNotActive(user.getEmail());
+
+    userOptional.ifPresent(value -> user.setId(value.getId()));
+
     try {
       return userRepository.save(user);
     } catch (Exception e) {
@@ -102,6 +106,15 @@ public class UserServiceImpl implements UserService {
   private Optional<User> findByEmail(String email) {
     try {
       return userRepository.findByEmailAndIsActiveTrue(email);
+    } catch (Exception e) {
+      log.error(REPOSITORY_FAILED_LOG, e.getMessage());
+      throw new RepositoryFailedException(REPOSITORY_FAILED);
+    }
+  }
+
+  private Optional<User> findByEmailIsNotActive(String email) {
+    try {
+      return userRepository.findByEmailAndIsActiveFalse(email);
     } catch (Exception e) {
       log.error(REPOSITORY_FAILED_LOG, e.getMessage());
       throw new RepositoryFailedException(REPOSITORY_FAILED);

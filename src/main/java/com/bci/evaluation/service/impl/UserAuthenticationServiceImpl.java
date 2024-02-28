@@ -2,6 +2,8 @@ package com.bci.evaluation.service.impl;
 
 import com.bci.evaluation.config.security.JwtTokenUtil;
 import com.bci.evaluation.dto.AuthenticationResponse;
+import com.bci.evaluation.dto.UserRequest;
+import com.bci.evaluation.dto.UserResponse;
 import com.bci.evaluation.service.UserAuthenticationService;
 import com.bci.evaluation.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +38,20 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
     } catch (BadCredentialsException e) {
       throw new BadCredentialsException("INVALID CREDENTIALS", e);
     }
+  }
+
+  @Override
+  public UserResponse firstTimeAuthenticate(UserRequest userRequest) {
+    String password = userRequest.getPassword();
+
+    String token = jwtTokenUtil.generateToken(
+        this.jwtUserDetailsService.firstTimeLoadUserByUsername(userRequest.getEmail(), userRequest.getPassword()));
+
+    UserResponse userResponse = this.userService.saveUser(userRequest, token);
+
+    this.authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(userRequest.getEmail(), password));
+
+    return userResponse;
   }
 }

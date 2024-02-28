@@ -61,9 +61,10 @@ public class User {
   @UpdateTimestamp
   private LocalDateTime modified;
 
-  public static User fromRequest(UserRequest userRequest) {
+  public static User fromRequest(UserRequest userRequest, String token) {
     LocalDateTime now = LocalDateTime.now();
     return User.builder()
+        .token(token)
         .isActive(true)
         .created(now)
         .lastLogin(now)

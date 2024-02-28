@@ -54,7 +54,7 @@ class UserServiceTest {
     when(this.passwordEncoder.encode(TestUtils.PASSWORD)).thenReturn(TestUtils.PASSWORD);
     when(this.userRepository.save(any())).thenReturn(TestUtils.getUserWithToken());
 
-    assertEquals(TestUtils.getUserResponse(), this.userService.saveUser(userRequest));
+    assertEquals(TestUtils.getUserResponse(), this.userService.saveUser(userRequest, TestUtils.TOKEN));
   }
 
   @Test
@@ -64,7 +64,7 @@ class UserServiceTest {
     when(this.userRepository.findByEmailAndIsActiveTrue(TestUtils.USERNAME)).thenReturn(
         Optional.of(TestUtils.getUser()));
 
-    assertThrows(AlreadyExistsException.class, () -> this.userService.saveUser(userRequest));
+    assertThrows(AlreadyExistsException.class, () -> this.userService.saveUser(userRequest, TestUtils.TOKEN));
   }
 
   @Test
@@ -76,7 +76,7 @@ class UserServiceTest {
 
     when(this.userRepository.findByEmailAndIsActiveTrue(TestUtils.USERNAME_1)).thenReturn(Optional.empty());
 
-    assertThrows(BadRequestException.class, () -> this.userService.saveUser(userRequest));
+    assertThrows(BadRequestException.class, () -> this.userService.saveUser(userRequest, TestUtils.TOKEN));
   }
 
   @Test
@@ -88,7 +88,7 @@ class UserServiceTest {
 
     when(this.userRepository.findByEmailAndIsActiveTrue(TestUtils.USERNAME)).thenReturn(Optional.empty());
 
-    assertThrows(BadRequestException.class, () -> this.userService.saveUser(userRequest));
+    assertThrows(BadRequestException.class, () -> this.userService.saveUser(userRequest, TestUtils.TOKEN));
   }
 
   @Test
@@ -100,7 +100,7 @@ class UserServiceTest {
 
     when(this.userRepository.findByEmailAndIsActiveTrue(TestUtils.USERNAME_1)).thenReturn(Optional.empty());
 
-    assertThrows(BadRequestException.class, () -> this.userService.saveUser(userRequest));
+    assertThrows(BadRequestException.class, () -> this.userService.saveUser(userRequest, TestUtils.TOKEN));
   }
 
   @Test
@@ -114,7 +114,7 @@ class UserServiceTest {
     when(this.passwordEncoder.encode(TestUtils.PASSWORD)).thenReturn(TestUtils.PASSWORD);
     when(this.userRepository.save(any())).thenThrow(new RuntimeException());
 
-    assertThrows(RepositoryFailedException.class, () -> this.userService.saveUser(userRequest));
+    assertThrows(RepositoryFailedException.class, () -> this.userService.saveUser(userRequest, TestUtils.TOKEN));
   }
 
   @Test

@@ -10,7 +10,7 @@ public interface UserService {
 
   UserResponse findUserResponse(String email);
 
-  UserResponse saveUser(UserRequest user);
+  UserResponse saveUser(UserRequest user, String token);
 
   void saveUserLoginData(String email, String token);
 
