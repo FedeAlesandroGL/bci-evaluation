@@ -14,12 +14,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +28,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-@Where(clause = "is_active = true")
-@SQLDelete(sql = "UPDATE user SET is_active = false WHERE email = ?")
+@SQLDelete(sql = "UPDATE users SET is_active = false WHERE id = ?")
 public class User {
 
   @Id
@@ -42,6 +40,7 @@ public class User {
 
   private String name;
 
+  @Column(unique = true)
   private String email;
 
   private String password;
@@ -49,27 +48,32 @@ public class User {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Phone> phones;
 
-  @CreationTimestamp
   @Column(name = "last_login")
   private LocalDateTime lastLogin;
 
   private String token;
 
-  @Column(name = "is_active", columnDefinition = "boolean default true")
+  @Column(name = "is_active")
   private Boolean isActive;
 
-  @CreationTimestamp
   private LocalDateTime created;
 
   @UpdateTimestamp
   private LocalDateTime modified;
 
   public static User fromRequest(UserRequest userRequest) {
+    LocalDateTime now = LocalDateTime.now();
     return User.builder()
+        .isActive(true)
+        .created(now)
+        .lastLogin(now)
+        .uuid(UUID.randomUUID())
         .name(userRequest.getName())
         .email(userRequest.getEmail())
         .password(userRequest.getPassword())
-        .phones(userRequest.getPhones().stream().map(Phone::fromDto).toList())
+        .phones(userRequest.getPhones() == null ?
+            new ArrayList<>() :
+            userRequest.getPhones().stream().map(Phone::fromDto).toList())
         .build();
   }
 

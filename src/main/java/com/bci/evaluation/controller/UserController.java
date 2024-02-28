@@ -1,5 +1,6 @@
 package com.bci.evaluation.controller;
 
+import com.bci.evaluation.dto.AuthenticationResponse;
 import com.bci.evaluation.dto.UserAuthentication;
 import com.bci.evaluation.dto.UserRequest;
 import com.bci.evaluation.dto.UserResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,16 +26,18 @@ public class UserController {
   private final UserAuthenticationService userAuthenticationService;
 
   @PostMapping("/authentication")
-  public ResponseEntity<String> createAuthenticationToken(UserAuthentication userAuthenticationRequest) {
+  public ResponseEntity<AuthenticationResponse> createAuthenticationToken(
+      @RequestBody UserAuthentication userAuthenticationRequest) {
 
     return ResponseEntity.ok(this.userAuthenticationService.authenticate(userAuthenticationRequest.getUsername(),
         userAuthenticationRequest.getPassword()));
   }
 
   @PostMapping("/user")
-  public ResponseEntity<UserResponse> createUser(UserRequest userRequest) {
+  public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.saveUser(userRequest));
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(this.userService.saveUser(userRequest));
   }
 
   @GetMapping("/user/{email}")

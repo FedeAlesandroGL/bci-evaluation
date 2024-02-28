@@ -8,19 +8,25 @@ import com.bci.evaluation.exception.NotFoundException;
 import com.bci.evaluation.exception.RepositoryFailedException;
 import com.bci.evaluation.model.User;
 import com.bci.evaluation.repository.UserRepository;
+import com.bci.evaluation.service.PhoneService;
 import com.bci.evaluation.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final PhoneService phoneService;
 
   @Value("${email.regexp}")
   private String emailRegex;
@@ -30,6 +36,7 @@ public class UserServiceImpl implements UserService {
   private static final String ALREADY_EXISTS = "Email is already registered";
   private static final String NOT_FOUND = "User not found";
   private static final String REPOSITORY_FAILED = "Repository failed, please try again later";
+  private static final String REPOSITORY_FAILED_LOG = "Repository failed, error -> {}";
   private static final String EMAIL_OR_PASSWORD_BAD_REQUEST = "Invalid email or password, check the requirements for them and try again";
 
   @Override
@@ -44,7 +51,14 @@ public class UserServiceImpl implements UserService {
       throw new BadRequestException(EMAIL_OR_PASSWORD_BAD_REQUEST);
     }
 
-    return UserResponse.fromUser(this.save(User.fromRequest(userRequest)));
+    userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+    User user = this.save(User.fromRequest(userRequest));
+    user.getPhones().forEach(phone -> phone.setUser(user));
+
+    phoneService.saveAll(user.getPhones());
+
+    return UserResponse.fromUser(user);
   }
 
   @Override
@@ -60,8 +74,12 @@ public class UserServiceImpl implements UserService {
   @Override
   public void saveUserLoginData(String email, String token) {
     User user = this.findUser(email);
+
+    if (user.getToken() != null) {
+      user.setLastLogin(LocalDateTime.now());
+    }
+
     user.setToken(token);
-    user.setLastLogin(LocalDateTime.now());
 
     this.save(user);
   }
@@ -76,14 +94,16 @@ public class UserServiceImpl implements UserService {
     try {
       return userRepository.save(user);
     } catch (Exception e) {
+      log.error(REPOSITORY_FAILED_LOG, e.getMessage());
       throw new RepositoryFailedException(REPOSITORY_FAILED);
     }
   }
 
   private Optional<User> findByEmail(String email) {
     try {
-      return userRepository.findByEmail(email);
+      return userRepository.findByEmailAndIsActiveTrue(email);
     } catch (Exception e) {
+      log.error(REPOSITORY_FAILED_LOG, e.getMessage());
       throw new RepositoryFailedException(REPOSITORY_FAILED);
     }
   }
@@ -92,6 +112,7 @@ public class UserServiceImpl implements UserService {
     try {
       userRepository.delete(user);
     } catch (Exception e) {
+      log.error(REPOSITORY_FAILED_LOG, e.getMessage());
       throw new RepositoryFailedException(REPOSITORY_FAILED);
     }
   }

@@ -1,6 +1,7 @@
 package com.bci.evaluation.service.impl;
 
 import com.bci.evaluation.config.security.JwtTokenUtil;
+import com.bci.evaluation.dto.AuthenticationResponse;
 import com.bci.evaluation.service.UserAuthenticationService;
 import com.bci.evaluation.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +24,17 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
   private final UserService userService;
 
   @Override
-  public String authenticate(String username, String password) {
+  public AuthenticationResponse authenticate(String username, String password) {
     try {
       this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
       String token = jwtTokenUtil.generateToken(this.jwtUserDetailsService.loadUserByUsername(username));
       this.userService.saveUserLoginData(username, token);
 
-      return token;
+      return new AuthenticationResponse(token);
     } catch (DisabledException e) {
-      throw new DisabledException("USER_DISABLED", e);
+      throw new DisabledException("USER DISABLED", e);
     } catch (BadCredentialsException e) {
-      throw new BadCredentialsException("INVALID_CREDENTIALS", e);
+      throw new BadCredentialsException("INVALID CREDENTIALS", e);
     }
   }
 }

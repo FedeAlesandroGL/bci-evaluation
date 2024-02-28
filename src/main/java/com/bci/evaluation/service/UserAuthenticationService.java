@@ -1,6 +1,8 @@
 package com.bci.evaluation.service;
 
+import com.bci.evaluation.dto.AuthenticationResponse;
+
 public interface UserAuthenticationService {
 
-  String authenticate(String username, String password);
+  AuthenticationResponse authenticate(String username, String password);
 }
