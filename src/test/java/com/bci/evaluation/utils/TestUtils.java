@@ -33,7 +33,8 @@ public class TestUtils {
   }
 
   public static UserResponse getUserResponse() {
-    return UserResponse.builder().id(UUID).token(TOKEN).build();
+    return UserResponse.builder().id(UUID).email(USERNAME).password(PASSWORD).token(TOKEN).phones(new ArrayList<>())
+        .build();
   }
 
   public static User getUser() {

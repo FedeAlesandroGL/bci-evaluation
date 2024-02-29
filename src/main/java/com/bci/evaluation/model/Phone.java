@@ -1,6 +1,6 @@
 package com.bci.evaluation.model;
 
-import com.bci.evaluation.dto.PhoneRequest;
+import com.bci.evaluation.dto.PhoneDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +39,7 @@ public class Phone {
   @JoinColumn(name = "user_id")
   private User user;
 
-  public static Phone fromDto(PhoneRequest phoneDto) {
+  public static Phone fromDto(PhoneDto phoneDto) {
     return Phone.builder()
         .number(phoneDto.getNumber())
         .cityCode(phoneDto.getCityCode())
