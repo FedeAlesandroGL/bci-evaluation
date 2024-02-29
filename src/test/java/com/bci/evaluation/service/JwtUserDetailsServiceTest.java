@@ -42,9 +42,8 @@ class JwtUserDetailsServiceTest {
   }
 
   @Test
-  void whenLoadUserByUsernameThenNotFound() {
-    when(this.userService.findUser(TestUtils.USERNAME)).thenReturn(TestUtils.getUserWrongUsername());
-
-    assertThrows(NotFoundException.class, () -> this.jwtUserDetailsService.loadUserByUsername(TestUtils.USERNAME));
+  void whenFirstTimeLoadUserByUsernameThenOk() {
+    assertEquals(TestUtils.getSecurityUser(),
+        this.jwtUserDetailsService.firstTimeLoadUserByUsername(TestUtils.USERNAME, TestUtils.PASSWORD));
   }
 }

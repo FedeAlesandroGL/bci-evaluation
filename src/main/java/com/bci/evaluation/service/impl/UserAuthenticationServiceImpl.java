@@ -34,9 +34,9 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
 
       return new AuthenticationResponse(token);
     } catch (DisabledException e) {
-      throw new DisabledException("USER DISABLED", e);
+      throw new DisabledException("The user is disabled", e);
     } catch (BadCredentialsException e) {
-      throw new BadCredentialsException("INVALID CREDENTIALS", e);
+      throw new BadCredentialsException("The credentials are invalid, please check them and try again", e);
     }
   }
 

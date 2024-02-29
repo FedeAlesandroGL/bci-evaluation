@@ -21,18 +21,15 @@ public class JwtUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user;
+
     try {
       user = this.userService.findUser(username);
     } catch (NotFoundException e) {
-      throw new BadCredentialsException("INVALID CREDENTIALS");
+      throw new BadCredentialsException("The credentials are invalid, please check them and try again");
     }
 
-    if (user.getEmail().equals(username)) {
-      return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-          new ArrayList<>());
-    } else {
-      throw new NotFoundException("User not found with username: " + username);
-    }
+    return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+        new ArrayList<>());
   }
 
   public UserDetails firstTimeLoadUserByUsername(String username, String password) {

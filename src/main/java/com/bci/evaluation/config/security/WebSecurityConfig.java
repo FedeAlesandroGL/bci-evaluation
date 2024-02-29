@@ -36,17 +36,17 @@ public class WebSecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
             .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-        .authorizeHttpRequests((authorize) -> authorize
+        .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/authentication").permitAll()
             .requestMatchers("/h2-console/**").permitAll()
-            .requestMatchers("/swagger-ui**").permitAll()
+            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-        .sessionManagement((session) -> session
+        .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .exceptionHandling((exception) -> exception
+        .exceptionHandling(exception -> exception
             .authenticationEntryPoint(jwtAuthenticationEntryPoint));
 
     return http.build();

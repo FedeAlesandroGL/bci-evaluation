@@ -104,7 +104,21 @@ class UserServiceTest {
   }
 
   @Test
-  void whenSaveUserThenThrowRepositoryFailedException() {
+  void whenSaveUserThenSaveFindByEmailAndIsActiveFalseRepositoryFailedException() {
+    ReflectionTestUtils.setField(this.userService, "emailRegex", TestUtils.EMAIL_REGEXP);
+    ReflectionTestUtils.setField(this.userService, "passwordRegex", TestUtils.PASSWORD_REGEXP);
+
+    UserRequest userRequest = TestUtils.getUserRequest();
+
+    when(this.userRepository.findByEmailAndIsActiveTrue(TestUtils.USERNAME)).thenReturn(Optional.empty());
+    when(this.passwordEncoder.encode(TestUtils.PASSWORD)).thenReturn(TestUtils.PASSWORD);
+    when(this.userRepository.findByEmailAndIsActiveFalse(TestUtils.USERNAME)).thenThrow(new RuntimeException());
+
+    assertThrows(RepositoryFailedException.class, () -> this.userService.saveUser(userRequest, TestUtils.TOKEN));
+  }
+
+  @Test
+  void whenSaveUserThenSaveThrowRepositoryFailedException() {
     ReflectionTestUtils.setField(this.userService, "emailRegex", TestUtils.EMAIL_REGEXP);
     ReflectionTestUtils.setField(this.userService, "passwordRegex", TestUtils.PASSWORD_REGEXP);
 

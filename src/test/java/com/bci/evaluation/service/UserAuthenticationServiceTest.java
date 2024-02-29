@@ -63,4 +63,13 @@ class UserAuthenticationServiceTest {
         () -> this.userAuthenticationService.authenticate(TestUtils.USERNAME, TestUtils.PASSWORD));
   }
 
+  @Test
+  void whenFirstTimeAuthenticateThenOk() {
+    when(this.jwtTokenUtil.generateToken(any())).thenReturn(TestUtils.TOKEN);
+    when(this.userService.saveUser(TestUtils.getUserRequest(), TestUtils.TOKEN)).thenReturn(
+        TestUtils.getUserResponse());
+
+    assertEquals(TestUtils.getUserResponse(),
+        this.userAuthenticationService.firstTimeAuthenticate(TestUtils.getUserRequest()));
+  }
 }

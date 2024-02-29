@@ -45,3 +45,7 @@ DELETE http://localhost:8080/api/user/{email}
 NOTA IMPORTANTE: Al estar eliminado el usuario, no se podrá traer de nuevo ya que se filtra por los registros activos.
 
 El script de la base de datos, se encuentra en la carpeta resources en un archivo llamado "schema.sql"
+
+La URL del SWAGGER es http://localhost:8080/swagger-ui/index.html
+
+El diagrama de la solución https://miro.com/app/board/uXjVNne9tFA=/?share_link_id=89416196724
