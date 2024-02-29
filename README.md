@@ -15,8 +15,8 @@ Ejecutar una llamada a " POST http://localhost:8080/api/user " utilizando el sig
 ]
 }
 
-Este request es distinto al enviado, le puse lowerCamelCase a los campos y le cambie que decía "contry" en vez de "
-country")
+Este request es levemente distinto al del PDF del ejercicio, le puse lowerCamelCase a los campos y le cambie que decía "
+contry" en vez de "country")
 
 El email tiene que respetar el formato solicitado, intuí que como eran 7 letras antes del arroba, que sea ese largo era
 una condición así también como que sean solo letras.
@@ -34,18 +34,19 @@ POST http://localhost:8080/api/authentication utilizando el siguiente request:
 
 Si el usuario y la contraseña no coinciden con los datos previamente ingresados, va a devolver una respuesta de error.
 
-Para poder buscar un usuario en específico puede usar el siguiente endpoint enviando el email por pathVariable, utiliza
-el email para buscarlo:
+Para poder buscar un usuario en específico puede usar el siguiente endpoint enviando el email por pathVariable y el
+bearer token en el header Authorization:
 GET http://localhost:8080/api/user/{email}
 
-Para poder eliminar un usuario (soft delete) puede usar el siguiente endpoint enviando el email por pathVariable,
-utiliza el email para buscarlo:
+Para poder eliminar un usuario (soft delete) puede usar el siguiente endpoint enviando el email por pathVariable y el
+bearer token en el header Authorization:
 DELETE http://localhost:8080/api/user/{email}
 
-NOTA IMPORTANTE: Al estar eliminado el usuario, no se podrá traer de nuevo ya que se filtra por los registros activos.
+Dato a tener en cuenta es que al estar eliminado el usuario, no se podrá traer de nuevo ya que se filtra por los
+registros activos exceptuando el caso que se da de alta nuevamente.
 
 El script de la base de datos, se encuentra en la carpeta resources en un archivo llamado "schema.sql"
 
-La URL del SWAGGER es http://localhost:8080/swagger-ui/index.html
+La URL del Swagger es http://localhost:8080/swagger-ui/index.html
 
-El diagrama de la solución https://miro.com/app/board/uXjVNne9tFA=/?share_link_id=89416196724
+El diagrama de la solución es https://miro.com/app/board/uXjVNne9tFA=/?share_link_id=89416196724
