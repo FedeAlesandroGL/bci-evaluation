@@ -4,7 +4,7 @@ Ejecutar una llamada a " POST http://localhost:8080/api/user " utilizando el sig
 
 {
 "name": "Juan Rodriguez",
-"email": "usernaamae@dominio.cl",
+"email": "username@dominio.cl",
 "password": "Password1!",
 "phones": [
 {
