@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserResponse {
 
-  private String uuid;
+  private String id;
   private LocalDateTime created;
   private LocalDateTime modified;
   private LocalDateTime lastLogin;
@@ -23,7 +23,7 @@ public class UserResponse {
 
   public static UserResponse fromUser(User user) {
     return UserResponse.builder()
-        .uuid(user.getUuid().toString())
+        .id(user.getUuid().toString())
         .created(user.getCreated())
         .modified(user.getModified())
         .lastLogin(user.getLastLogin())
