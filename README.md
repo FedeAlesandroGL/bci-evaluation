@@ -172,6 +172,12 @@ uno de los siguientes caracteres especiales @!#$%^&+= y 8 dígitos de largo.
 
 ### Script de base de datos
 
-```http
+```
 src/main/resources/schema.sql
+```
+### Postman
+Se encuentra la colección en el archivo:
+
+```
+EvaluationBci.postman_collection.json
 ```

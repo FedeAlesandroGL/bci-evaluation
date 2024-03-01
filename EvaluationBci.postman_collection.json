@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "da9f135c-5af0-427e-bcbb-3e38066be4ab",
+		"name": "Evaluation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Save",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Juan Rodriguez\",\n    \"email\": \"juanrodriguez@dominio.cl\",\n    \"password\": \"Password1!\",\n    \"phones\": [\n        {\n            \"number\": \"1234567\",\n            \"cityCode\": \"1\",\n            \"countryCode\": \"57\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"juanrodriguez@dominio.cl\",\n    \"password\": \"Password1!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/authentication",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"authentication"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindByEmail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VybmFtZUBkb21pbmlvLmNsIiwiaWF0IjoxNzA5MzEzMTI3LCJleHAiOjE3MDkzMTY3Mjd9.rYihf-nVLhDBCe4Kez8EK3XF_G3N1Yib1NohbImozJiFdfV2A258Ft64QTjiQW_IA450zGG_3IOhWWlBmokSxA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/user/juanrodriguez@dominio.cl",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"juanrodriguez@dominio.cl"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteByEmail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VybmFtZUBkb21pbmlvLmNsIiwiaWF0IjoxNzA5MzEzMTI3LCJleHAiOjE3MDkzMTY3Mjd9.rYihf-nVLhDBCe4Kez8EK3XF_G3N1Yib1NohbImozJiFdfV2A258Ft64QTjiQW_IA450zGG_3IOhWWlBmokSxA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/user/juanrodriguez@dominio.cl",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"juanrodriguez@dominio.cl"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
