@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -32,7 +33,7 @@ public class UserResponse {
         .name(user.getName())
         .email(user.getEmail())
         .password(user.getPassword())
-        .phones(user.getPhones().stream().map(PhoneDto::fromPhone).toList())
+        .phones(user.getPhones().stream().map(PhoneDto::fromPhone).collect(Collectors.toList()))
         .token(user.getToken())
         .isActive(user.getIsActive())
         .created(user.getCreated())

@@ -37,10 +37,10 @@ public class WebSecurityConfig {
         .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer
             .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/authentication").permitAll()
-            .requestMatchers("/h2-console/**").permitAll()
-            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/user").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/authentication").permitAll()
+            .antMatchers("/h2-console/**").permitAll()
+            .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
