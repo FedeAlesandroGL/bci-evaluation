@@ -45,7 +45,7 @@ public class User {
 
   private String password;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<Phone> phones;
 
   @Column(name = "last_login")

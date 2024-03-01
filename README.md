@@ -1,53 +1,177 @@
-Luego de clonar y ejecutar la aplicación, para probarlo primero hay que:
+# BCI Evaluation
 
-Ejecutar una llamada a " POST http://localhost:8080/api/user " utilizando el siguiente request:
+Ejercicio a modo de evaluación para ingresar en el proyecto de BCI
 
-{
-"name": "Juan Rodriguez",
-"email": "username@dominio.cl",
-"password": "Password1!",
-"phones": [
-{
-"number": "1234567",
-"cityCode": "1",
-"countryCode": "57"
-}
-]
-}
+## Correr la aplicación localmente
 
-Este request es levemente distinto al del PDF del ejercicio, le puse lowerCamelCase a los campos y le cambie que decía "
-contry" en vez de "country")
+Clone el proyecto
 
-El email tiene que respetar el formato solicitado, intuí que como eran 7 letras antes del arroba, que sea ese largo era
-una condición así también como que sean solo letras.
-Luego la contraseña tiene que respetar el formato de contener al menos una letra minúscula, una mayúscula, un número y
+```bash
+  git clone https://github.com/FedeAlesandroGL/bci-evaluation.git
+```
+
+Vaya al directorio del proyecto
+
+```bash
+  cd bci-evaluation
+```
+
+Abralo en su IDE de preferencia. Si no se instalan las dependencias mediante el IDE o quiere iniciar la aplicación sin
+el IDE, entonces ejecute el comando
+
+```bash
+  mvn install
+```
+
+Por último inicie la aplicación.
+
+## API
+
+### Registrar y autenticar el usuario
+
+```http
+  POST /api/user
+```
+
+#### Datos a tener en cuenta
+
+El email tiene que cumplir con el formato solicitado y no existir en la base de datos.
+
+La contraseña tiene que respetar el formato de contener al menos una letra minúscula, una mayúscula, un número,
 uno de los siguientes caracteres especiales @!#$%^&+= y 8 dígitos de largo.
 
-Una vez creado el usuario, se le va a devolver en la respuesta el token. Si desea obtener uno nuevamente, puede hacerlo
-llamando al endpoint de autenticación. Este llamado va a modificar el token del usuario en la base de datos, así también
-como el lastLogin.
-POST http://localhost:8080/api/authentication utilizando el siguiente request:
+#### Request de ejemplo:
 
+```json
 {
-"username": "username@dominio.cl",
-"password": "Password1!"
+  "name": "Juan Rodriguez",
+  "email": "username@dominio.cl",
+  "password": "Password1!",
+  "phones": [
+    {
+      "number": "1234567",
+      "cityCode": "1",
+      "countryCode": "57"
+    }
+  ]
 }
+```
 
-Si el usuario y la contraseña no coinciden con los datos previamente ingresados, va a devolver una respuesta de error.
+#### Response de ejemplo:
 
-Para poder buscar un usuario en específico puede usar el siguiente endpoint enviando el email por pathVariable y el
-bearer token en el header Authorization:
-GET http://localhost:8080/api/user/{email}
+```json
+{
+  "id": "c037d849-4c6d-43fc-bea1-f80d93c8bf45",
+  "name": "Juan Rodriguez",
+  "email": "username@dominio.cl",
+  "password": "encryptedPassword.",
+  "phones": [
+    {
+      "number": "1234567",
+      "cityCode": "1",
+      "countryCode": "57"
+    }
+  ],
+  "token": "1234token",
+  "isActive": true,
+  "created": "2024-03-01T14:03:36.351975177",
+  "modified": "2024-03-01T14:03:36.378424",
+  "lastLogin": "2024-03-01T14:03:36.351975177"
+}
+```
 
-Para poder eliminar un usuario (soft delete) puede usar el siguiente endpoint enviando el email por pathVariable y el
-bearer token en el header Authorization:
-DELETE http://localhost:8080/api/user/{email}
+### Autenticar el usuario nuevamente
 
-Dato a tener en cuenta es que al estar eliminado el usuario, no se podrá traer de nuevo ya que se filtra por los
-registros activos exceptuando el caso que se da de alta nuevamente.
+```http
+  POST /api/authentication
+```
 
-El script de la base de datos se encuentra en la carpeta resources en un archivo llamado "schema.sql".
+#### Request de ejemplo:
 
-La URL del Swagger es http://localhost:8080/swagger-ui/index.html
+```json
+{
+  "username": "username@dominio.cl",
+  "password": "Password1!"
+}
+```
 
-El diagrama de la solución es https://miro.com/app/board/uXjVNne9tFA=/?share_link_id=89416196724
+#### Response de ejemplo:
+
+```json
+{
+  "token": "1234token"
+}
+```
+
+### Obtener un usuario por email
+
+```http
+  GET /api/user/{email}
+```
+
+| Parameter       | Type     | Description                      |
+|:----------------|:---------|:---------------------------------|
+| `Authorization` | `Header` | **Requerido**. Bearer token      |
+| `email`         | `string` | **Requerido**. El email a buscar |
+
+#### Response de ejemplo:
+
+```json
+{
+  "id": "c037d849-4c6d-43fc-bea1-f80d93c8bf45",
+  "name": "Juan Rodriguez",
+  "email": "username@dominio.cl",
+  "password": "encryptedPassword",
+  "phones": [
+    {
+      "number": "1234567",
+      "cityCode": "1",
+      "countryCode": "57"
+    }
+  ],
+  "token": "1234token",
+  "isActive": true,
+  "created": "2024-03-01T14:03:36.351975177",
+  "modified": "2024-03-01T14:03:36.378424",
+  "lastLogin": "2024-03-01T14:03:36.351975177"
+}
+```
+
+### Eliminar un usuario por email
+
+```http
+  DELETE /api/user/{email}
+```
+
+| Parameter       | Type     | Description                                    |
+|:----------------|:---------|:-----------------------------------------------|
+| `Authorization` | `Header` | **Requerido**. Bearer token                    |
+| `email`         | `string` | **Requerido**. El email del usuario a eliminar |
+
+### Caso de error
+
+#### Response de ejemplo:
+
+```json
+{
+  "message": "Error message"
+}
+```
+
+## Documentación
+
+### Swagger
+
+```http
+  /swagger-ui/index.html
+```
+
+### Diagrama de la solución
+
+[Diagrama en Miro](https://miro.com/app/board/uXjVNne9tFA=/?share_link_id=89416196724)
+
+### Script de base de datos
+
+```http
+src/main/resources/schema.sql
+```

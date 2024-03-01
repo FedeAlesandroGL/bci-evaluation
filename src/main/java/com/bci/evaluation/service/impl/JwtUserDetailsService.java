@@ -1,8 +1,8 @@
 package com.bci.evaluation.service.impl;
 
+import com.bci.evaluation.dto.UserResponse;
 import com.bci.evaluation.exception.BadCredentialsException;
 import com.bci.evaluation.exception.NotFoundException;
-import com.bci.evaluation.model.User;
 import com.bci.evaluation.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,21 +20,16 @@ public class JwtUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user;
+    UserResponse user;
 
     try {
-      user = this.userService.findUser(username);
+      user = this.userService.findUserResponse(username);
     } catch (NotFoundException e) {
       throw new BadCredentialsException("The credentials are invalid, please check them and try again");
     }
 
     return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
         new ArrayList<>());
-  }
-
-  public UserDetails firstTimeLoadUserByUsername(String username, String password) {
-
-    return new org.springframework.security.core.userdetails.User(username, password, new ArrayList<>());
   }
 
 }

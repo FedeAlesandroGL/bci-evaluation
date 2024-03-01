@@ -61,8 +61,7 @@ public class UserServiceImpl implements UserService {
     return UserResponse.fromUser(user);
   }
 
-  @Override
-  public User findUser(String email) {
+  private User findUser(String email) {
     return this.findByEmail(email).orElseThrow(() -> new NotFoundException(NOT_FOUND));
   }
 

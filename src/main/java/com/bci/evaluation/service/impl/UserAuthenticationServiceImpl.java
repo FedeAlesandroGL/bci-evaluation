@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +30,8 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
   public AuthenticationResponse authenticate(String username, String password) {
     try {
       this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-      String token = jwtTokenUtil.generateToken(this.jwtUserDetailsService.loadUserByUsername(username));
+      UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
+      String token = jwtTokenUtil.generateToken(userDetails.getUsername());
       this.userService.saveUserLoginData(username, token);
 
       return new AuthenticationResponse(token);
@@ -44,8 +46,7 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
   public UserResponse firstTimeAuthenticate(UserRequest userRequest) {
     String password = userRequest.getPassword();
 
-    String token = jwtTokenUtil.generateToken(
-        this.jwtUserDetailsService.firstTimeLoadUserByUsername(userRequest.getEmail(), userRequest.getPassword()));
+    String token = jwtTokenUtil.generateToken(userRequest.getEmail());
 
     UserResponse userResponse = this.userService.saveUser(userRequest, token);
 

@@ -42,9 +42,9 @@ public class JwtTokenUtil {
     return expiration.before(new Date());
   }
 
-  public String generateToken(UserDetails userDetails) {
+  public String generateToken(String subject) {
     Map<String, Object> claims = new HashMap<>();
-    return doGenerateToken(claims, userDetails.getUsername());
+    return doGenerateToken(claims, subject);
   }
 
   private String doGenerateToken(Map<String, Object> claims, String subject) {

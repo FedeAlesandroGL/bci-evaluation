@@ -38,7 +38,7 @@ public class TestUtils {
   }
 
   public static User getUser() {
-    return User.builder().email(USERNAME).password(PASSWORD).uuid(java.util.UUID.fromString(UUID))
+    return User.builder().email(USERNAME).password(PASSWORD).token(TOKEN).uuid(java.util.UUID.fromString(UUID))
         .phones(new ArrayList<>()).build();
   }
 

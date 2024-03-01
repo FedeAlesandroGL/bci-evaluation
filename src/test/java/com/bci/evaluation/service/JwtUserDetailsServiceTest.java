@@ -28,22 +28,16 @@ class JwtUserDetailsServiceTest {
 
   @Test
   void whenLoadUserByUsernameThenOk() {
-    when(this.userService.findUser(TestUtils.USERNAME)).thenReturn(TestUtils.getUser());
+    when(this.userService.findUserResponse(TestUtils.USERNAME)).thenReturn(TestUtils.getUserResponse());
 
     assertEquals(TestUtils.getSecurityUser(), this.jwtUserDetailsService.loadUserByUsername(TestUtils.USERNAME));
   }
 
   @Test
   void whenLoadUserByUsernameThenThrowBadCredentialsException() {
-    when(this.userService.findUser(TestUtils.USERNAME)).thenThrow(new NotFoundException("User not found"));
+    when(this.userService.findUserResponse(TestUtils.USERNAME)).thenThrow(new NotFoundException("User not found"));
 
     assertThrows(BadCredentialsException.class,
         () -> this.jwtUserDetailsService.loadUserByUsername(TestUtils.USERNAME));
-  }
-
-  @Test
-  void whenFirstTimeLoadUserByUsernameThenOk() {
-    assertEquals(TestUtils.getSecurityUser(),
-        this.jwtUserDetailsService.firstTimeLoadUserByUsername(TestUtils.USERNAME, TestUtils.PASSWORD));
   }
 }

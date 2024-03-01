@@ -42,6 +42,7 @@ class UserAuthenticationServiceTest {
   @Test
   void whenAuthenticateThenOk() {
     when(this.jwtTokenUtil.generateToken(any())).thenReturn(TestUtils.TOKEN);
+    when(this.jwtUserDetailsService.loadUserByUsername(TestUtils.USERNAME)).thenReturn(TestUtils.getSecurityUser());
 
     assertEquals(new AuthenticationResponse(TestUtils.TOKEN),
         this.userAuthenticationService.authenticate(TestUtils.USERNAME, TestUtils.PASSWORD));

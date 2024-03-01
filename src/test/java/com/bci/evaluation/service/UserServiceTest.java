@@ -136,21 +136,21 @@ class UserServiceTest {
     when(this.userRepository.findByEmailAndIsActiveTrue(TestUtils.USERNAME)).thenReturn(
         Optional.of(TestUtils.getUser()));
 
-    assertEquals(TestUtils.getUser(), this.userService.findUser(TestUtils.USERNAME));
+    assertEquals(TestUtils.getUserResponse(), this.userService.findUserResponse(TestUtils.USERNAME));
   }
 
   @Test
   void whenFindUserThenThrowNotFoundException() {
     when(this.userRepository.findByEmailAndIsActiveTrue(TestUtils.USERNAME)).thenReturn(Optional.empty());
 
-    assertThrows(NotFoundException.class, () -> this.userService.findUser(TestUtils.USERNAME));
+    assertThrows(NotFoundException.class, () -> this.userService.findUserResponse(TestUtils.USERNAME));
   }
 
   @Test
   void whenFindUserThenThrowRepositoryFailedException() {
     when(this.userRepository.findByEmailAndIsActiveTrue(TestUtils.USERNAME)).thenThrow(new RuntimeException());
 
-    assertThrows(RepositoryFailedException.class, () -> this.userService.findUser(TestUtils.USERNAME));
+    assertThrows(RepositoryFailedException.class, () -> this.userService.findUserResponse(TestUtils.USERNAME));
   }
 
   @Test
